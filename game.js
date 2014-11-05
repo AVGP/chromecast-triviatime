@@ -77,7 +77,7 @@ function updateLeaderboard() {
     playerRankings.push(players[player]);
   }
   playerRankings.sort(function(a,b) { return a.score - b.score; }).reverse();
-  window.messageBus.send('urn:x-cast:de.geekonaut.triviatime', playerRankings.slice(0,10));
+  window.messageBus.broadcast(playerRankings.slice(0,10));
 }
 
 window.onload = function() {
