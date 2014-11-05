@@ -11,8 +11,8 @@ function initReceiver() {
   appConfig.statusText = 'Ready to play';
   appConfig.maxInactivity = 6000;
 
-  window.castReceiverManager.start(appConfig);
   window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:de.geekonaut.triviatime');
+  window.castReceiverManager.start(appConfig);
 
   window.castReceiverManager.onReady = function(event) {
     console.log('Received Ready event: ' + JSON.stringify(event.data));
@@ -77,7 +77,7 @@ function updateLeaderboard() {
     playerRankings.push(players[player]);
   }
   playerRankings.sort(function(a,b) { return a.score - b.score; }).reverse();
-  window.messageBus.send(playerRankings.slice(0,10));
+  window.messageBus.send('urn:x-cast:de.geekonaut.triviatime', playerRankings.slice(0,10));
 }
 
 window.onload = function() {
