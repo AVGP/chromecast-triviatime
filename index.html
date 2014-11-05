@@ -98,7 +98,7 @@ document.getElementById("cast").addEventListener("click", function() {
       var ranking = JSON.parse(msg);
       var leaderboardContent = "";
       for(var i=0; i<ranking.length; i++) {
-        leaderboardContent += "<li> " + ranking[i].name + ":" + ranking[i].score + "</li>";
+        leaderboardContent += "<li>" + ranking[i].name + " : " + ranking[i].score + "</li>";
       }
       document.getElementById("leaderboard").innerHTML = leaderboardContent;
     });
