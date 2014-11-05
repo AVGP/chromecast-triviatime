@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width">
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    div.controls {
+      text-align: justify;
+    }
+
+    button.control {
+      display: inline-block;
+      width: 30%;
+      height: 30%;
+    }
+  </style>
+  <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+</head>
+<body>
+  <h1>Trivia Time!</h1>
+  <h2>Instructions</h2>
+  <ol>
+    <li>Start the app on the Chromecast by pressing this button: <button id="cast">Start</button></li>
+    <li>Scan the QR code with a phone or enter the game ID below</li>
+    <li>Press play on tape (:</li>
+  </ol>
+
+  <label for="game_id">Game ID:</label>
+  <input id="game_id">
+  <button>Play!</button>
+
+  <h2>Leaderboard</h2>
+  <ol id="leaderboard">
+  </ol>
+<script>
+function receiverListener(e) {
+  if( e === 'available' ) {
+    console.log("Receiver available");
+  }
+}
+
+function sessionListener(s) {
+  console.log("Session received", s);
+  window.session = s;
+}
+
+function onInitSuccess() {
+  console.log("Init successful.");
+}
+
+function onError(err) {
+  console.log("Init err");
+  alert("Shizzle - the initialization failed :(");
+  console.log(err);
+}
+
+var initializeCastApi = function() {
+  if (!chrome.cast || !chrome.cast.isAvailable) {
+    setTimeout(this, 1000);
+    return;
+  }
+
+  console.log("Initialize...");
+  var sessionRequest = new chrome.cast.SessionRequest("137C3100");
+  var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
+    sessionListener,
+    receiverListener);
+  chrome.cast.initialize(apiConfig, onInitSuccess, onError);
+  console.log("Waiting for init callbacks...");
+};
+
+if (!chrome.cast || !chrome.cast.isAvailable) {
+  console.log("Deferred...");
+  setTimeout(initializeCastApi, 1000);
+} else {
+  initializeCastApi();
+}
+
+document.getElementById("cast").addEventListener("click", function() {
+  if(window.session) {
+    //We have a session so stop it...
+    window.session.stop();
+    window.session = null;
+    return;
+  }
+
+  chrome.cast.requestSession(function success(session) {
+    window.session = session;
+    console.log("Session!!", session);
+  }, function error(e) {
+    alert("Oh no, it didn't work :(");
+    console.log(e);
+  });
+}, false);
+
+</script>
+</body>
+</html>
