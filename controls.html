@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    html, body {
+      margin: 0;
+
+      width:  100%;
+      height: 100%;
+
+      text-align: justify;
+    }
+
+    #answers {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    button {
+      display: block;
+      flex: 1 50%;
+      font-size: 4em;
+    }
+
+    h2 { text-align: center; }
+  </style>
+</head>
+<body>
+  <h2>Score: 0</h2>
+  <div id="answers">
+    <button id="A">A</button>
+    <button id="B">B</button>
+    <button id="C">C</button>
+    <button id="D">D</button>
+  </div>
+
+  <script src="http://cdn.peerjs.com/0.3/peer.js"></script>
+  <script>
+    var gameID = document.location.hash.slice(1);
+    var name = window.prompt("Your player name, please");
+    var peer = new Peer({key: '7nxxqfxzhestt9'});
+    console.log(peer);
+    conn = peer.connect(gameID);
+    conn.on('open', function() {
+      console.log("CONNECTED");
+      conn.send({type: 'HI', name: name});
+
+      document.querySelector("#answers").addEventListener("click", function(e) {
+        conn.send({type: 'answer', answer: e.target.id});
+      });
+    });
+    conn.on('data', function(msg) {
+      if(msg.type == 'score') {
+        document.querySelector("h2").textContent = "Score: " + msg.value;
+      }
+    });
+
+  </script>
+</body>
+</html>
