@@ -93,6 +93,9 @@ document.getElementById("cast").addEventListener("click", function() {
   chrome.cast.requestSession(function success(session) {
     window.session = session;
     console.log("Session!!", session);
+    session.addMessageListener('urn:x-cast:de.geekonaut.triviatime', function(msg){
+      console.log("MSG arrived:", msg);
+    });
   }, function error(e) {
     alert("Oh no, it didn't work :(");
     console.log(e);
