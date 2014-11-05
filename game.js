@@ -32,7 +32,7 @@ function initPeerSession() {
   peer.on('open', function(id) {
     qr.canvas({
       canvas: canvas,
-      value: 'http://192.168.1.110:8000/controls.html#' + id
+      value: 'http://avgp.github.io/chromecast-triviatime/controls.html#' + id
     });
   });
 
