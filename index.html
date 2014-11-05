@@ -93,8 +93,14 @@ document.getElementById("cast").addEventListener("click", function() {
   chrome.cast.requestSession(function success(session) {
     window.session = session;
     console.log("Session!!", session);
-    session.addMessageListener('urn:x-cast:de.geekonaut.triviatime', function(msg){
+    session.addMessageListener('urn:x-cast:de.geekonaut.triviatime', function(ns, msg){
       console.log("MSG arrived:", msg);
+      var ranking = JSON.parse(msg);
+      var leaderboardContent = "";
+      for(var i=0; i<ranking.length; i++) {
+        leaderboardContent += "<li> " + ranking[i].name + ":" + ranking[i].score + "</li>";
+      }
+      document.getElementById("leaderboard").innerHTML = leaderboardContent;
     });
   }, function error(e) {
     alert("Oh no, it didn't work :(");
