@@ -20,7 +20,7 @@ var QUESTIONS = [
     correct: 'A'
   },
   {
-    question: 'The Stanislawski method is associated with which profession?',
+    question: 'The Stanislawski method is about?',
     choices: ['Chemistry', 'Painting', 'Medicine', 'Acting' ],
     correct: 'D'
   }
