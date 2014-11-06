@@ -70,6 +70,11 @@ function initPeerSession() {
 function setCountdown() {
   if(countDown == 0) {
     iCurrentQuestion++;
+    correctThisRound = 0;
+    for(var player in players) {
+      if(!players.hasOwnProperty(player)) continue;
+      players[player].answered = false;
+    }
     document.querySelector("#question").textContent = QUESTIONS[iCurrentQuestion].question;
 
     for(var i=0;i<4;i++) {
