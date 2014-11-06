@@ -1,5 +1,5 @@
 var canvas  = document.querySelector("canvas"),
-    players = {}, correctThisRound = 0, iCurrentQuestion = 0, countDown = 30;
+    players = {}, correctThisRound = 0, iCurrentQuestion = -1, countDown = 0;
 
 canvas.width  = 500;
 canvas.height = 500;
