@@ -1,5 +1,5 @@
 var canvas  = document.querySelector("canvas"),
-    players = {}, correctThisRound = 0;
+    players = {}, correctThisRound = 0, iCurrentQuestion = 0, countDown = 30;
 
 canvas.width  = 500;
 canvas.height = 500;
@@ -40,11 +40,8 @@ function initPeerSession() {
     console.log("CONTROLS ESTABLISHED", c);
     canvas.className = 'hidden';
     document.getElementById("answers").className = '';
-    document.querySelector("#question").textContent = QUESTIONS[0].question;
 
-    for(var i=0;i<4;i++) {
-      document.querySelector("#answer" + i + " p").textContent = QUESTIONS[0].choices[i];
-    }
+    setCountdown();
 
     c.on('data', function(data) {
       if(data.type == 'HI') { // Player registered
@@ -57,7 +54,7 @@ function initPeerSession() {
         if(players[c.peer].answered) return;
         players[c.peer].answered = true;
 
-        if(data.answer === QUESTIONS[0].correct) {
+        if(data.answer === QUESTIONS[iCurrentQuestion].correct) {
           players[c.peer].score += 1 + (5 - correctThisRound);
           c.send({type: 'score', value: players[c.peer].score});
           correctThisRound++;
@@ -68,6 +65,23 @@ function initPeerSession() {
       }
     });
   });
+}
+
+function setCountdown() {
+  if(countDown == 0) {
+    iCurrentQuestion++;
+    document.querySelector("#question").textContent = QUESTIONS[iCurrentQuestion].question;
+
+    for(var i=0;i<4;i++) {
+      document.querySelector("#answer" + i + " p").textContent = QUESTIONS[iCurrentQuestion].choices[i];
+    }
+    countDown = 30;
+  }
+
+  countDown--;
+  document.getElementById("countdown").textContent = countDown + "s";
+
+  setTimeout(setCountdown, 1000);
 }
 
 function updateLeaderboard() {
