@@ -1,5 +1,6 @@
 var canvas  = document.querySelector("canvas"),
-    players = {}, correctThisRound = 0, iCurrentQuestion = -1, countDown = 0;
+    players = {}, playerList = [],
+    correctThisRound = 0, iCurrentQuestion = -1, countDown = 0;
 
 canvas.width  = 500;
 canvas.height = 500;
@@ -23,6 +24,14 @@ function initReceiver() {
     console.log('Received Sender Connected event: ' + event.data);
     console.log(window.castReceiverManager.getSender(event.data).userAgent);
   };
+
+  window.messageBus.onMessage = function(msg) {
+    // the only message we can get is the start message!
+    canvas.className = 'hidden';
+    document.getElementById("answers").className = '';
+
+    setCountdown();    
+  }
 }
 
 function initPeerSession() {
@@ -38,15 +47,13 @@ function initPeerSession() {
 
   peer.on('connection', function(c) {
     console.log("CONTROLS ESTABLISHED", c);
-    canvas.className = 'hidden';
-    document.getElementById("answers").className = '';
-
-    setCountdown();
 
     c.on('data', function(data) {
       if(data.type == 'HI') { // Player registered
         players[c.peer] = {name: data.name, score: 0};
+        playerList.push(players[c.peer]);
         console.log("Player joined", data.name);
+        window.messageBus.broadcast(JSON.stringify(playerList));
       } else { // Answer given
         console.log("Received Answer:", data.answer);
 
