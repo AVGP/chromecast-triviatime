@@ -28,7 +28,7 @@
   <ol>
     <li>Start the app on the Chromecast by pressing this button: <button id="cast">Start</button></li>
     <li>Scan the QR code with a phone or enter the game ID below</li>
-    <li>Press play on tape (:</li>
+    <li>Press <button id="start">play</butto> on tape (:</li>
   </ol>
 
   <h2>Leaderboard</h2>
@@ -102,6 +102,15 @@ document.getElementById("cast").addEventListener("click", function() {
     alert("Oh no, it didn't work :(");
     console.log(e);
   });
+}, false);
+
+document.getElementById("start").addEventListener("click", function() {
+  if(!window.session) {
+    alert("Start Chromecast session first!");
+    return;
+  }
+
+  window.session.sendMessage('urn:x-cast:de.geekonaut.triviatime', 'START');
 }, false);
 
 </script>
